@@ -3,3 +3,6 @@
 
 # Ignore compiled output directory
 **dist/  
+
+# Envs
+**.env
