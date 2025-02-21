@@ -17,7 +17,7 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  usename String @unique
+  username String @unique
   messageSent Message[] @relation("SentMessages")
   messageReceived Message[] @relation("ReceivedMessages")
 }
