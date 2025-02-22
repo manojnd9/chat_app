@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import user_routes from './routes/user_routes';
 
 dotenv.config();
 
@@ -11,6 +12,9 @@ const port = process.env.PORT || 3000;
 // Add cors and json support
 app.use(cors());
 app.use(express.json());
+
+// Add routers
+app.use("/users", user_routes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Chat backend running! File Changed!');
