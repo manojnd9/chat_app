@@ -18,7 +18,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Add api routes
+// Add rest api routes
 app.use('/users', user_routes);
 app.use('/messages', message_routes);
 
