@@ -27,9 +27,9 @@ const server = http.createServer(app);
 initialise_websocket(server);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Chat backend is running!');
+    res.send('Chat backend is running!');
 });
 
 server.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+    console.log(`Server is running at http://localhost:${port}`);
 });
