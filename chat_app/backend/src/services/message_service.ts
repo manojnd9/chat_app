@@ -42,3 +42,33 @@ export async function store_message(params: MsgSchema) {
     throw error;
   }
 }
+
+export async function get_messages(senderId: number, receiverId: number) {
+  try {
+    // Validate sender id and receiver id
+    const sender = await prisma.user.findUnique({ where: { id: senderId } });
+    const receiver = await prisma.user.findUnique({
+      where: { id: receiverId },
+    });
+
+    if (!sender || !receiver) {
+      throw new Error('Sender or Receiver does not exist.');
+    }
+
+    // Fetch messages where sender & receiver match in either ways
+    const messages = await prisma.message.findMany({
+      where: {
+        OR: [
+          { senderId: senderId, receiverId: receiverId },
+          { senderId: receiverId, receiverId: senderId },
+        ],
+      },
+      orderBy: { createdAt: 'asc' }, // Oldest first
+    });
+
+    return messages;
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    throw error;
+  }
+}

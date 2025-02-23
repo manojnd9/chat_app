@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { store_message } from './services/message_service';
+import { get_messages, store_message } from './services/message_service';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { prisma } from './prisma';
 
@@ -48,6 +48,28 @@ export function initialise_websocket(server: any) {
       }
     }
   );
+
+  // Register getMessages method
+  rpc_server.addMethod('getMessages', async ({ senderId, receiverId }) => {
+    console.log(
+      `Fetching the messages between sender: ${senderId} and receiver: ${receiverId}`
+    );
+    try {
+      const messages = await get_messages(senderId, receiverId);
+      console.log(`Retrieved ${messages.length} messages!`);
+      return {
+        jsonrpc: '2.0',
+        result: messages,
+      };
+    } catch (e) {
+      console.error(`Error fetching messages: ${e}`);
+      return {
+        jsonrpc: '2.0',
+        error: { code: -32000, message: e },
+        id: null,
+      };
+    }
+  });
 
   // Register join room method
   rpc_server.addMethod('join', async ({ user_id, socket_id }) => {
