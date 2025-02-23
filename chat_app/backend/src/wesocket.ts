@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import { store_message } from './services/message_service';
 import { JSONRPCServer } from 'json-rpc-2.0';
+import { prisma } from './prisma';
 
 export function initialise_websocket(server: any) {
   const io = new Server(server, {
@@ -21,30 +22,37 @@ export function initialise_websocket(server: any) {
     'sendMessage',
     async ({ senderId, receiverId, content }) => {
       console.log('RPC message received:', { senderId, receiverId, content });
-      // Validate sender and receiver id before storing messages
+      try {
+        // Store the message in db
+        const new_message = await store_message({
+          senderId,
+          receiverId,
+          content,
+        });
 
-      // Store the message in db
-      const new_message = await store_message({
-        senderId,
-        receiverId,
-        content,
-      });
-
-      console.log('Message stored in db: ', new_message);
-      // Send message to the receivers room
-      io.to(`user-${receiverId}`).emit('newMessage', {
-        jsonrpc: '2.0',
-        params: new_message,
-      });
-      console.log(`Message sent to user-${receiverId}`);
-      return new_message;
+        console.log('Message stored in db: ', new_message);
+        // Send message to the receivers room
+        io.to(`user-${receiverId}`).emit('newMessage', {
+          jsonrpc: '2.0',
+          params: new_message,
+        });
+        console.log(`Message sent to user-${receiverId}`);
+        return new_message;
+      } catch (e) {
+        console.error(`Validation failed: ${e}`);
+        return {
+          jsonrpc: '2.0',
+          error: { code: -32000, message: e },
+          id: null,
+        };
+      }
     }
   );
 
   // Register join room method
   rpc_server.addMethod('join', async ({ user_id, socket_id }) => {
     if (!user_id || !socket_id) {
-      console.error('user_id or socket_id is missing!');
+      console.error('Error: user_id or socket_id is missing!');
       return {
         jsonrpc: '2.0',
         error: { code: -32700, message: 'user_id or socket_id is missing!' },
@@ -53,6 +61,19 @@ export function initialise_websocket(server: any) {
     }
 
     // Validate user_id before joining the room
+    const user = await prisma.user.findUnique({ where: { id: user_id } });
+    if (!user) {
+      console.error(`Error: User with ID ${user_id} does not exist`);
+      return {
+        jsonrpc: '2.0',
+        error: {
+          code: -32700,
+          message: `Error: User with ID ${user_id} does not exist`,
+        },
+        id: null,
+      };
+    }
+
     const room_name = `user-${user_id}`;
 
     // Get socket corresponding to the user
