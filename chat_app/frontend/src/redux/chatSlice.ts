@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import socket from '../utils/socket';
+import axios from 'axios';
 
 // Message interface schema
 interface Message {
@@ -20,6 +21,18 @@ const initialState: ChatState = {
     currentUserId: null,
     messages: [], // Empty chat
 };
+
+// Async function to get message history
+const url = 'http://localhost:3000';
+export const fetchMessages = createAsyncThunk(
+    'chat/fetchMessages',
+    async ({ senderId, receiverId }: { senderId: number | null; receiverId: number | null }) => {
+        const res = await axios.get(
+            `${url}/messages/getmessages/?senderId=${senderId}&receiverId=${receiverId}`
+        );
+        return res.data;
+    }
+);
 
 const chatSlice = createSlice({
     name: 'chat',
@@ -45,6 +58,11 @@ const chatSlice = createSlice({
         receiveMessage: (state, action: PayloadAction<Message>) => {
             state.messages.push(action.payload);
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchMessages.fulfilled, (state, action) => {
+            state.messages = action.payload;
+        });
     },
 });
 

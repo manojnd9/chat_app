@@ -27,23 +27,37 @@ router.post('/', async (req: Request<{}, {}, MsgSendRequest>, res: Response) => 
 
 // Get messages of a user from db
 interface UserInfo {
-    user_id: string;
+    senderId: string;
+    receiverId: string;
 }
-router.get('/:user_id', async (req: Request<UserInfo>, res: Response) => {
-    const u_id = parseInt(req.params.user_id);
-    if (isNaN(u_id)) {
-        res.status(400).json({ error: 'Invalid user ID' });
-        return;
+router.get('/getmessages', async (req: Request<UserInfo>, res: Response): Promise<any> => {
+    try {
+        const { senderId, receiverId } = req.query;
+        // Validate sender id and receiver id
+        const sender = await prisma.user.findUnique({ where: { id: Number(senderId) } });
+        const receiver = await prisma.user.findUnique({
+            where: { id: Number(receiverId) },
+        });
+
+        if (!sender || !receiver) {
+            return res.status(400).json({ error: 'senderId and receiverId are required' });
+        }
+        // Fetch messages where sender & receiver match in either ways
+        const messages = await prisma.message.findMany({
+            where: {
+                OR: [
+                    { senderId: Number(senderId), receiverId: Number(receiverId) },
+                    { senderId: Number(receiverId), receiverId: Number(senderId) },
+                ],
+            },
+            orderBy: { createdAt: 'asc' }, // Oldest first
+        });
+
+        res.json(messages);
+    } catch (e) {
+        console.error('Error fetching messages:', e);
+        res.status(400).json({ error: 'Internal server error' });
     }
-
-    const messages = await prisma.message.findMany({
-        where: {
-            OR: [{ senderId: u_id }, { receiverId: u_id }],
-        },
-        orderBy: { createdAt: 'asc' },
-    });
-
-    res.json(messages);
 });
 
 export default router;

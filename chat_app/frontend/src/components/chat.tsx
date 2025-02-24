@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+import { useSelector } from 'react-redux';
+import { RootState, useAppDispatch } from '../redux/store';
 import socket from '../utils/socket';
-import { receiveMessage, sendMessage } from '../redux/chatSlice';
+import { fetchMessages, receiveMessage, sendMessage } from '../redux/chatSlice';
 
 const Chat = () => {
     // Set up redux hooks
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     // this state would have gotten updated to the selected user's id in the first/home page
     const currentUserId = useSelector((state: RootState) => state.chat.currentUserId);
     const messages = useSelector((state: RootState) => state.chat.messages);
@@ -67,12 +67,17 @@ const Chat = () => {
         socket.on('newMessage', handlerIncomingMessage);
 
         return () => {
-            // socket.disconnect();
             console.log('Leaving chat. but socket connection is on!');
             socket.off('newMessage', handlerIncomingMessage);
         };
-    }, [currentUserId, dispatch]); // TODO: add default part to ensure the effect runs when user id changes
+    }, [currentUserId, dispatch]);
 
+    // Load message history between sender and receiver
+    useEffect(() => {
+        if (selectedUserId) {
+            dispatch(fetchMessages({ senderId: currentUserId, receiverId: selectedUserId }));
+        }
+    }, [selectedUserId, dispatch, currentUserId]);
     // Handler to dispatch the reducer function to send the message to the store upon
     // the action from the user
     const handleSendMessage = () => {
