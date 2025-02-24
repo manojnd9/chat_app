@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import socket from '../utils/socket';
 
 // Message interface schema
 interface Message {
-    id: number;
-    senderId: number;
-    receiverId: number;
-    content: string;
-    createdAt: string;
+    // id: number;
+    senderId: number | null;
+    receiverId: number | null;
+    content: string | null;
+    createdAt?: string | null;
 }
 
 // Define the state of the chat
@@ -28,10 +29,24 @@ const chatSlice = createSlice({
             state.currentUserId = action.payload;
         },
         sendMessage: (state, action: PayloadAction<Message>) => {
+            const message = action.payload;
+            state.messages.push(message);
+            // send to backend using socket
+            socket.emit(
+                'message',
+                JSON.stringify({
+                    jsonrpc: '2.0',
+                    method: 'sendMessage',
+                    params: message,
+                    id: new Date().getTime(),
+                })
+            );
+        },
+        receiveMessage: (state, action: PayloadAction<Message>) => {
             state.messages.push(action.payload);
         },
     },
 });
 
-export const { setCurrentUserId, sendMessage } = chatSlice.actions;
+export const { setCurrentUserId, sendMessage, receiveMessage } = chatSlice.actions;
 export default chatSlice.reducer;

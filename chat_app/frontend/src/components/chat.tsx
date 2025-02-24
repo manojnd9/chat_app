@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import socket from '../utils/socket';
+import { receiveMessage, sendMessage } from '../redux/chatSlice';
 
 const Chat = () => {
+    // Set up redux hooks
+    const dispatch = useDispatch();
     // this state would have gotten updated to the selected user's id in the first/home page
     const currentUserId = useSelector((state: RootState) => state.chat.currentUserId);
+    const messages = useSelector((state: RootState) => state.chat.messages);
 
     // This is initial approach. User data is hard coded
     // Later once the authentication is set up, users can be fetched from db via backend
@@ -22,32 +26,67 @@ const Chat = () => {
     // States and functions to manage the local components on interaction of the
     // user in the UI
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-    const [messages, setMessages] = useState<{ senderId: number; content: string }[]>([]);
     const [input, setInput] = useState('');
 
     // Connect to websocket on loading
     useEffect(() => {
+        // First connect to the server
         if (!socket.connected) {
             socket.connect();
             socket.on('connect', () => {
                 console.log('Connected to websocket server!');
             });
         }
-        // socket.on('connect', () => {
-        //     console.log('Connected to websocket server!');
-        // });
+
+        // Inform backend to make user join chat room
+        // using once -> join only one time
+        socket.once('connect', () => {
+            socket.emit(
+                'message',
+                JSON.stringify({
+                    jsonrpc: '2.0',
+                    method: 'join',
+                    params: { user_id: currentUserId },
+                    id: new Date().getTime(),
+                })
+            );
+        });
+
+        // Listen for incoming messages
+        const handlerIncomingMessage = (data: any) => {
+            console.log('received data: ', data);
+            try {
+                if (data.jsonrpc === '2.0' && data.params) {
+                    dispatch(receiveMessage(data.params));
+                }
+            } catch (e) {
+                console.error('Error parsing received message!', e);
+            }
+        };
+        socket.off('newMessage');
+        socket.on('newMessage', handlerIncomingMessage);
 
         return () => {
             // socket.disconnect();
             console.log('Leaving chat. but socket connection is on!');
+            socket.off('newMessage', handlerIncomingMessage);
         };
-    });
+    }, [currentUserId, dispatch]); // TODO: add default part to ensure the effect runs when user id changes
 
     // Handler to dispatch the reducer function to send the message to the store upon
     // the action from the user
     const handleSendMessage = () => {
         if (input.trim() !== '' && selectedUserId) {
-            setMessages([...messages, { senderId: currentUserId!, content: input }]);
+            const message = {
+                senderId: currentUserId,
+                receiverId: selectedUserId,
+                content: input,
+            };
+            if (!socket.connected) {
+                // Show warning
+                console.log('no connection to server!');
+            }
+            dispatch(sendMessage(message));
             setInput('');
         }
     };
