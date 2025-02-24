@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
+import socket from '../utils/socket';
 
 const Chat = () => {
     // this state would have gotten updated to the selected user's id in the first/home page
@@ -23,6 +24,24 @@ const Chat = () => {
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
     const [messages, setMessages] = useState<{ senderId: number; content: string }[]>([]);
     const [input, setInput] = useState('');
+
+    // Connect to websocket on loading
+    useEffect(() => {
+        if (!socket.connected) {
+            socket.connect();
+            socket.on('connect', () => {
+                console.log('Connected to websocket server!');
+            });
+        }
+        // socket.on('connect', () => {
+        //     console.log('Connected to websocket server!');
+        // });
+
+        return () => {
+            // socket.disconnect();
+            console.log('Leaving chat. but socket connection is on!');
+        };
+    });
 
     // Handler to dispatch the reducer function to send the message to the store upon
     // the action from the user

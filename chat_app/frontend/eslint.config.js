@@ -15,6 +15,7 @@ export default [
                 window: true,
                 document: true,
                 HTMLElement: true,
+                console: 'readonly',
             },
         },
         plugins: {
