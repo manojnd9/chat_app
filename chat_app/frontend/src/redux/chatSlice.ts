@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Message interface schema
 interface Message {
@@ -11,10 +11,12 @@ interface Message {
 
 // Define the state of the chat
 interface ChatState {
+    currentUserId: number | null;
     messages: Message[];
 }
 
 const initialState: ChatState = {
+    currentUserId: null,
     messages: [], // Empty chat
 };
 
@@ -22,11 +24,14 @@ const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
-        sendMessage: (state, action) => {
+        setCurrentUserId: (state, action: PayloadAction<number>) => {
+            state.currentUserId = action.payload;
+        },
+        sendMessage: (state, action: PayloadAction<Message>) => {
             state.messages.push(action.payload);
         },
     },
 });
 
-export const { sendMessage } = chatSlice.actions;
+export const { setCurrentUserId, sendMessage } = chatSlice.actions;
 export default chatSlice.reducer;

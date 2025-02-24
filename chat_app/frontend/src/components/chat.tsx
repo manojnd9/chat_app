@@ -1,52 +1,99 @@
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-import { useState } from 'react';
-import { sendMessage } from '../redux/chatSlice';
 
 const Chat = () => {
-    const dispatch = useDispatch();
-    const messages = useSelector((state: RootState) => state.chat.messages);
-    const [message, setMessage] = useState('');
+    // this state would have gotten updated to the selected user's id in the first/home page
+    const currentUserId = useSelector((state: RootState) => state.chat.currentUserId);
 
+    // This is initial approach. User data is hard coded
+    // Later once the authentication is set up, users can be fetched from db via backend
+    const allUsers = [
+        { id: 1, name: 'User 1' },
+        { id: 2, name: 'User 2' },
+        { id: 3, name: 'User 3' },
+    ];
+
+    // Filter out the currentUser from all the users in order to show them
+    // as possible recipients of the message
+    const otherUsers = allUsers.filter((user) => user.id !== currentUserId);
+
+    // States and functions to manage the local components on interaction of the
+    // user in the UI
+    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const [messages, setMessages] = useState<{ senderId: number; content: string }[]>([]);
+    const [input, setInput] = useState('');
+
+    // Handler to dispatch the reducer function to send the message to the store upon
+    // the action from the user
     const handleSendMessage = () => {
-        if (message.trim() === '') return;
-        // Dispatch action to the reducer to send message
-        dispatch(sendMessage({ senderId: 1, receiverId: 2, content: message }));
-        // Clear text input messaging field
-        setMessage('');
+        if (input.trim() !== '' && selectedUserId) {
+            setMessages([...messages, { senderId: currentUserId!, content: input }]);
+            setInput('');
+        }
     };
+
     return (
-        <div className="flex flex-col h-screen bg-gray-900 text-white">
-            {/*Header*/}
-            <div className="p-4 text-center bg-gray-800 shadow-lg">
-                <h1 className="text-lg font-bold">Real-Time Chatter!</h1>
+        <div className="flex h-screen bg-gray-800 text-white">
+            {/* Left Panel to display current user and possible recipients */}
+            <div className="w-1/4 bg-gray-900 p-4">
+                {/**current user */}
+                <h2 className="text-lg font-bold">You: User {currentUserId}</h2>
+                {/**Recipients */}
+                <ul>
+                    {otherUsers.map((user) => (
+                        <li
+                            key={user.id}
+                            className={`cursor-pointer p-2 ${
+                                selectedUserId === user.id ? 'bg-blue-500' : 'hover:bg-gray-700'
+                            }`}
+                            onClick={() => setSelectedUserId(user.id)}
+                        >
+                            {user.name}
+                        </li>
+                    ))}
+                </ul>
             </div>
-            {/*Message List*/}
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                {messages.map((msg, index) => (
-                    <div
-                        key={index}
-                        className={`p-2 max-w-xs rounded-md ${msg.senderId === 1 ? 'bg-blue-500 ml-auto' : 'bg-gray-700'}`}
-                    >
-                        {msg.content}
-                    </div>
-                ))}
-            </div>
-            {/* Text input */}
-            <div className="p-4 flex items-center bg-gray-800">
-                <input
-                    type="text"
-                    className="flex-1 p-2 rounded-md text-black"
-                    placeholder="Type a message..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                />
-                <button
-                    onClick={handleSendMessage}
-                    className="ml-2 p-2 bg-blue-600 hover:bg-blue-700 rounded-md"
-                >
-                    Send
-                </button>
+
+            {/** Chat display: when no recipient is selected -> show default message */}
+            <div className="flex flex-col flex-1 p-4">
+                {selectedUserId ? (
+                    <>
+                        <h2 className="text-lg font-bold mb-2">Chat with User {selectedUserId}</h2>
+                        <div className="flex-1 overflow-y-auto bg-gray-700 p-4 rounded-lg">
+                            {messages.map((msg, index) => (
+                                <div
+                                    key={index}
+                                    className={`mb-2 p-2 rounded-lg max-w-xs ${
+                                        msg.senderId === currentUserId
+                                            ? 'bg-blue-500 text-right ml-auto'
+                                            : 'bg-gray-600 text-left'
+                                    }`}
+                                >
+                                    {msg.content}
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-4 flex">
+                            <input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                className="flex-1 p-2 rounded-lg text-black"
+                                placeholder="Type a message..."
+                            />
+                            <button
+                                onClick={handleSendMessage}
+                                className="ml-2 bg-blue-600 px-4 py-2 rounded-lg"
+                            >
+                                Send
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <p>Select a user to start chatting</p>
+                )}
             </div>
         </div>
     );
