@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 // Message interface schema
 interface Message {
@@ -22,11 +22,11 @@ const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
-        addMessage: (state, action: PayloadAction<Message>) => {
+        sendMessage: (state, action) => {
             state.messages.push(action.payload);
         },
     },
 });
 
-export const { addMessage } = chatSlice.actions;
+export const { sendMessage } = chatSlice.actions;
 export default chatSlice.reducer;
