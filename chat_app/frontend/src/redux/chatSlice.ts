@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import socket from '../utils/socket';
 import axios from 'axios';
+import { BACKEND_URL } from '../utils/urls';
 
 // Message interface schema
 interface Message {
@@ -23,12 +24,12 @@ const initialState: ChatState = {
 };
 
 // Async function to get message history
-const url = 'http://localhost:3000';
+
 export const fetchMessages = createAsyncThunk(
     'chat/fetchMessages',
     async ({ senderId, receiverId }: { senderId: number | null; receiverId: number | null }) => {
         const res = await axios.get(
-            `${url}/messages/getmessages/?senderId=${senderId}&receiverId=${receiverId}`
+            `${BACKEND_URL}/messages/getmessages/?senderId=${senderId}&receiverId=${receiverId}`
         );
         return res.data;
     }

@@ -1,9 +1,8 @@
 import { io } from 'socket.io-client';
+import { BACKEND_URL } from './urls';
 
 // Connect to the backend websocket server
-const url = 'http://localhost:3000';
-
-const socket = io(url, {
+const socket = io(BACKEND_URL, {
     transports: ['websocket'],
     autoConnect: false,
 });
