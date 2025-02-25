@@ -2,32 +2,63 @@
 FRONTEND_DIR = chat_app/frontend
 BACKEND_DIR = chat_app/backend
 
-# Entire project set-up
-setup-all:
-	make db
+# Set-up backend
+backend-setup-firsttime:
 	make backend
+	make db
+	make db-migrate
+	make prisma-generate
+	make backend-start-dev
+
+# Backend dependencies
+backend:
+	cd $(BACKEND_DIR) && npm install
 
 # Set-up database
 db:
 	cd $(BACKEND_DIR) && docker-compose up -d
 
-# Migrate db
-migrate:
+# Migrate prisma schema
+db-migrate:
 	cd $(BACKEND_DIR) && npx prisma migrate dev --name init
 
 # Generate prisma client
 prisma-generate:
 	cd $(BACKEND_DIR) && npx prisma generate
 
-# Backend dependencies
-backend:
-	cd $(BACKEND_DIR) && npm install
+# Start backend dev server
+backend-start-dev:
+	cd ${BACKEND_DIR} && npm run dev
 
-format-check:
+# Build and start backend prod server
+backend-start-prod:
+	cd ${BACKEND_DIR} && npm run build && npm run start
+
+## Other helper makes for backend
+backend-format-check:
 	cd $(BACKEND_DIR) && npx prettier . --check
 
-format-fix:
+backend-format-fix:
 	cd $(BACKEND_DIR) && npx prettier . --write
 
-lint:
+backend-lint-check:
 	cd $(BACKEND_DIR) && npx eslint .
+
+backend-lint-fix:
+	cd $(BACKEND_DIR) && npx eslint . --fix
+
+########################################################################
+
+# FRONT END COMMANDS
+frontend-setup-firsttime:
+	make frontend
+	make frontend-start-dev
+
+frontend:
+	cd ${FRONTEND_DIR} && npm install
+
+frontend-start-dev:
+	cd ${FRONTEND_DIR} && npm run start
+
+frontend-start-prod:
+	cd ${FRONTEND_DIR} && npm run build && npm run serve
