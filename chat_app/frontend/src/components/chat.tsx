@@ -69,7 +69,6 @@ const Chat = () => {
 
         // Listen for incoming messages
         const handlerIncomingMessage = (data: any) => {
-            console.log('received data: ', data);
             try {
                 if (data.jsonrpc === '2.0' && data.params) {
                     dispatch(receiveMessage(data.params));
@@ -82,7 +81,6 @@ const Chat = () => {
         socket.on('newMessage', handlerIncomingMessage);
 
         return () => {
-            console.log('socket connection is on!');
             socket.off('newMessage', handlerIncomingMessage);
         };
     }, [currentUserId, dispatch]);
