@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from '../redux/store';
 import socket from '../utils/socket';
 import { fetchMessages, receiveMessage, sendMessage } from '../redux/chatSlice';
+import { Canvas } from '@react-three/fiber';
+import ThreeDIcon from './threeDIcon';
 
 const Chat = () => {
     // Set up redux hooks
@@ -78,6 +80,10 @@ const Chat = () => {
             dispatch(fetchMessages({ senderId: currentUserId, receiverId: selectedUserId }));
         }
     }, [selectedUserId, dispatch, currentUserId]);
+
+    // 3D Animation Canvas Set-up
+    const [showIcon, setShowIcon] = useState(false);
+
     // Handler to dispatch the reducer function to send the message to the store upon
     // the action from the user
     const handleSendMessage = () => {
@@ -93,6 +99,10 @@ const Chat = () => {
             }
             dispatch(sendMessage(message));
             setInput('');
+            // Render animation for 1second anf then hide
+            setShowIcon(true);
+            /* eslint-disable */
+            setTimeout(() => setShowIcon(false), 2000);
         }
     };
 
@@ -138,6 +148,24 @@ const Chat = () => {
                             ))}
                         </div>
 
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <Canvas style={{ width: '40%', height: '40%', position: 'absolute' }}>
+                                <ambientLight intensity={Math.PI / 2} />
+                                <spotLight
+                                    position={[10, 10, 10]}
+                                    angle={0.15}
+                                    penumbra={1}
+                                    decay={0}
+                                    intensity={Math.PI}
+                                />
+                                <pointLight
+                                    position={[-10, -10, -10]}
+                                    decay={0}
+                                    intensity={Math.PI}
+                                />
+                                <ThreeDIcon visible={showIcon} />
+                            </Canvas>
+                        </div>
                         <div className="mt-4 flex">
                             <input
                                 type="text"
