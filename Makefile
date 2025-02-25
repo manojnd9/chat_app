@@ -65,7 +65,7 @@ frontend:
 	cd ${FRONTEND_DIR} && npm install
 
 frontend-start-dev:
-	cd ${FRONTEND_DIR} && npm run start
+	cd ${FRONTEND_DIR} && PORT=3001 npm run start
 
 frontend-start-prod:
 	cd ${FRONTEND_DIR} && npm run build && npm run serve
