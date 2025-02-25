@@ -133,24 +133,24 @@ make frontend-start-prod
 
 After setting up both frontend and backend, follow these steps in order to start using the chat application in the browser/s:
 
-1️. Open **two browser windows** (e.g., Safari & Chrome) and open the frontend served on `http://localhost:<available port>`.
+- Open **two browser windows** (e.g., Safari & Chrome) and open the frontend served on `http://localhost:<available port>`.
 
-    - When you first open the app, you need to **select a user** from the home screen.
+  - When you first open the app, you need to **select a user** from the home screen.
 
-2️. Select **different users** in each window.
+- Select **different users** in each window.
 
-    - The chat page opens, showing **available users to chat with**
+  - The chat page opens, showing **available users to chat with**
 
-3️. Choose another user from the list to start a private chat.
+- Choose another user from the list to start a private chat.
 
-    - Click on a user, **type a message**, and press **Send**.
+  - Click on a user, **type a message**, and press **Send**.
 
-4️. The message should appear instantly.
+- The message should appear instantly.
 
-6️. **Messages persist in the database** and reload when reopening the chat.
+- **Messages persist in the database** and reload when reopening the chat.
 
-    - The message history is loaded when opening the chat.
-    - A **3D icon animation** will appear when a message is sent.
+  - The message history is loaded when opening the chat.
+  - A **3D icon animation** will appear when a message is sent.
 
 ---
 
