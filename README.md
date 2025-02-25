@@ -3,7 +3,7 @@
 ## Project Description
 
 This is a real-time chat web application built using **react and typescript**.
-The application allows users to send messages in real-time while displaying **animated 3D icons** whenever a message is sent. It also displays the chat history between two users (sender and receiver).
+The application allows users to send messages in real-time while displaying **animated 3D icon** whenever a message is sent. It also displays the chat history between two users (sender and receiver).
 
 ## Tech Stack Used
 
@@ -14,7 +14,7 @@ The application allows users to send messages in real-time while displaying **an
 - React Router for Navigation in browser
 - TailwindCss for styling
 - Socket.IO Client for real-time communication (with json-rpc format on payload)
-- Three.js for animations
+- Three.js and React-three/fiber for 3D animations
 
 ### Back-End
 
@@ -34,6 +34,12 @@ cd chat_app
 ```
 
 NOTE: All the `make` commands mentioned below are in this [Makefile](Makefile) in root folder.
+
+#### ENVIRONMENT FILE
+
+- There is example file `.env.example` in `./chat_app/backend/` showing examples of required env variables to be added to .env file before starting with backend set-up.
+- Create a new .env and paste these there and adapt as per your need.
+- You can also keep same values to run the backend locally.
 
 ### Step-2.1: Set-up Backend
 
@@ -160,12 +166,21 @@ After setting up both frontend and backend, follow these steps in order to start
 - **Messages are stored** in PostgreSQL using Prisma
 - **Message history loads automatically** when opening a chat
 - **Users join WebSocket rooms automatically**
-- **Animated 3D icons appear when sending a message (To Be Implemented Next)**
+- **Animated 3D icons appear when sending a message**
 
 ## Known Issues & Limitations
 
 - **Refreshing the `/chat` page (once opened after user selection in frontend) causes a route issue** (React Router doesn’t handle refresh properly).
+- If backend restarts, front-end connects back, but there is issue on user rejoining. And the browser should be refreshed i.e. come from user selection page.
 - **No authentication and Create-User functionality is implemented yet** (users are currently hardcoded).
+
+## Future Improvements
+
+- **Authentication and Signup Functionality**
+- **Adding contacts or own set of receivers**
+- **Rooms for group chat**
+- **Unit, Integration Testing and CI/CD workflows**
+- **Deploy the app and work on load**
 
 ## License
 

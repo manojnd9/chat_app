@@ -1,9 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from '../redux/store';
 import socket from '../utils/socket';
 import { fetchMessages, receiveMessage, sendMessage } from '../redux/chatSlice';
+import { Canvas } from '@react-three/fiber';
+import ThreeDIcon from './threeDIcon';
 
+/** Contains all the components to render chat page.
+ * - It renders:
+ *      - current user
+ *      - list of users to send message in the left panel
+ *      - message display area
+ *      - input field and send button
+ *      - canvas to render rotating tetrahedron animation for 2s after message is sent
+ * - Above rendering and data management is done using...
+ *      - redux hooks call
+ *      - local state management
+ *      - dummy users mapping
+ *      - current user and selected receiver management
+ */
 const Chat = () => {
     // Set up redux hooks
     const dispatch = useAppDispatch();
@@ -54,7 +69,6 @@ const Chat = () => {
 
         // Listen for incoming messages
         const handlerIncomingMessage = (data: any) => {
-            console.log('received data: ', data);
             try {
                 if (data.jsonrpc === '2.0' && data.params) {
                     dispatch(receiveMessage(data.params));
@@ -67,7 +81,6 @@ const Chat = () => {
         socket.on('newMessage', handlerIncomingMessage);
 
         return () => {
-            console.log('Leaving chat. but socket connection is on!');
             socket.off('newMessage', handlerIncomingMessage);
         };
     }, [currentUserId, dispatch]);
@@ -78,6 +91,10 @@ const Chat = () => {
             dispatch(fetchMessages({ senderId: currentUserId, receiverId: selectedUserId }));
         }
     }, [selectedUserId, dispatch, currentUserId]);
+
+    // 3D Animation Canvas Set-up
+    const [showIcon, setShowIcon] = useState(false);
+
     // Handler to dispatch the reducer function to send the message to the store upon
     // the action from the user
     const handleSendMessage = () => {
@@ -93,6 +110,10 @@ const Chat = () => {
             }
             dispatch(sendMessage(message));
             setInput('');
+            // Render animation for 1second anf then hide
+            setShowIcon(true);
+            /* eslint-disable */
+            setTimeout(() => setShowIcon(false), 2000);
         }
     };
 
@@ -138,6 +159,24 @@ const Chat = () => {
                             ))}
                         </div>
 
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <Canvas style={{ width: '40%', height: '40%', position: 'absolute' }}>
+                                <ambientLight intensity={Math.PI / 2} />
+                                <spotLight
+                                    position={[10, 10, 10]}
+                                    angle={0.15}
+                                    penumbra={1}
+                                    decay={0}
+                                    intensity={Math.PI}
+                                />
+                                <pointLight
+                                    position={[-10, -10, -10]}
+                                    decay={0}
+                                    intensity={Math.PI}
+                                />
+                                <ThreeDIcon visible={showIcon} />
+                            </Canvas>
+                        </div>
                         <div className="mt-4 flex">
                             <input
                                 type="text"
@@ -155,7 +194,7 @@ const Chat = () => {
                         </div>
                     </>
                 ) : (
-                    <p>Select a user to start chatting</p>
+                    <p>Select a user to start chatting!</p>
                 )}
             </div>
         </div>

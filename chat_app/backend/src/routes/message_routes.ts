@@ -10,6 +10,7 @@ interface MsgSendRequest {
     content: string;
 }
 
+/**Endpoint to create message in the database */
 router.post('/', async (req: Request<{}, {}, MsgSendRequest>, res: Response) => {
     // unpack
     const { senderId, receiverId, content } = req.body;

@@ -8,6 +8,8 @@ interface CreateUserRequest {
     username: string;
 }
 
+/** API Endpoint to create `user` in the database */
+
 router.post('/', async (req: Request<{}, {}, CreateUserRequest>, res: Response): Promise<void> => {
     const { username } = req.body;
     try {
@@ -25,6 +27,8 @@ router.post('/', async (req: Request<{}, {}, CreateUserRequest>, res: Response):
 interface UserParams {
     user_id: string;
 }
+
+/** API Endpoint to get `user_id`s details from the database */
 
 router.get('/:user_id', async (req: Request<UserParams>, res: Response): Promise<void> => {
     const u_id = parseInt(req.params.user_id);
