@@ -2,7 +2,9 @@
 **node_modules/
 
 # Ignore compiled output directory
-**dist/  
+**dist/
+**build/  
 
 # Envs
 **.env
+**.DS_Store

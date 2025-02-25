@@ -13,7 +13,7 @@ db:
 
 # Migrate db
 migrate:
-	cd $(BACKEND_DIR) && npx migrate dev --name init
+	cd $(BACKEND_DIR) && npx prisma migrate dev --name init
 
 # Generate prisma client
 prisma-generate:
