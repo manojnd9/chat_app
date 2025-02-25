@@ -171,6 +171,7 @@ After setting up both frontend and backend, follow these steps in order to start
 ## Known Issues & Limitations
 
 - **Refreshing the `/chat` page (once opened after user selection in frontend) causes a route issue** (React Router doesn’t handle refresh properly).
+- If backend restarts, front-end connects back, but there is issue on user rejoining. And the browser should be refreshed i.e. come from user selection page.
 - **No authentication and Create-User functionality is implemented yet** (users are currently hardcoded).
 
 ## License
