@@ -6,6 +6,12 @@ interface ThreeDIconProps {
     visible: boolean;
 }
 
+/** Function to render 3D animation of a tetrahedron geometry.
+ *
+ *  - uses componenents from react-three/fiber to render the animation.
+ *  - the motion is made visible from the local state for the canvas component
+ *      - which is passed as boolean to this function to show/hide animation. *
+ */
 const ThreeDIcon = ({ visible }: ThreeDIconProps) => {
     // This reference will give us direct access to the mesh
     const meshRef = useRef<Mesh>(null!);

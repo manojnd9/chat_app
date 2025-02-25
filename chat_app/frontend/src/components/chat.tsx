@@ -6,6 +6,19 @@ import { fetchMessages, receiveMessage, sendMessage } from '../redux/chatSlice';
 import { Canvas } from '@react-three/fiber';
 import ThreeDIcon from './threeDIcon';
 
+/** Contains all the components to render chat page.
+ * - It renders:
+ *      - current user
+ *      - list of users to send message in the left panel
+ *      - message display area
+ *      - input field and send button
+ *      - canvas to render rotating tetrahedron animation for 2s after message is sent
+ * - Above rendering and data management is done using...
+ *      - redux hooks call
+ *      - local state management
+ *      - dummy users mapping
+ *      - current user and selected receiver management
+ */
 const Chat = () => {
     // Set up redux hooks
     const dispatch = useAppDispatch();
@@ -183,7 +196,7 @@ const Chat = () => {
                         </div>
                     </>
                 ) : (
-                    <p>Select a user to start chatting</p>
+                    <p>Select a user to start chatting!</p>
                 )}
             </div>
         </div>

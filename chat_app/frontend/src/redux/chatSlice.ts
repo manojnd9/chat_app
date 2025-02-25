@@ -34,6 +34,14 @@ export const fetchMessages = createAsyncThunk(
     }
 );
 
+/** Slice to manage the chat redux state with following reducers
+ * to modify and update current state of the app.
+ *  - setCurrentUserId: as soon as user is selected in home window,
+ *      corresponding user id is stored in the state.
+ *  - sendMessage: emits message to backend using socket.io and updates current messages state
+ *  - receiveMessage: when socket listens for incoming message this function is used to update message state
+ *  - extraReducers: using fetchMessages async thunk, message history from backed is fetched using axios rest api call/
+ */
 const chatSlice = createSlice({
     name: 'chat',
     initialState,
