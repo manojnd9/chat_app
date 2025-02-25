@@ -179,7 +179,7 @@ After setting up both frontend and backend, follow these steps in order to start
 - **Authentication and Signup Functionality**
 - **Adding contacts or own set of receivers**
 - **Rooms for group chat**
-- **Unit and Integration Testing**
+- **Unit, Integration Testing and CI/CD workflows**
 - **Deploy the app and work on load**
 
 ## License
