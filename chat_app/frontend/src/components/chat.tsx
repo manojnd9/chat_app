@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from '../redux/store';
 import socket from '../utils/socket';
@@ -69,7 +69,7 @@ const Chat = () => {
         socket.on('newMessage', handlerIncomingMessage);
 
         return () => {
-            console.log('Leaving chat. but socket connection is on!');
+            console.log('socket connection is on!');
             socket.off('newMessage', handlerIncomingMessage);
         };
     }, [currentUserId, dispatch]);
