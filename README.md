@@ -174,6 +174,13 @@ After setting up both frontend and backend, follow these steps in order to start
 - If backend restarts, front-end connects back, but there is issue on user rejoining. And the browser should be refreshed i.e. come from user selection page.
 - **No authentication and Create-User functionality is implemented yet** (users are currently hardcoded).
 
+## Future Improvements
+
+- **Authentication and Signup Functionality**
+- **Adding contacts or own set of receivers**
+- **Unit and Integration Testing**
+- **Deploy the app and work on load**
+
 ## License
 
 This project is part of a **coding challenge** and is for evaluation purposes only
