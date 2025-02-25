@@ -47,6 +47,14 @@ For the first time execute following command to set-up backend and start the ser
 make backend-setup-firsttime
 ```
 
+NOTE: About Database:
+
+- Since authentication and add/create user functionality is not there in front-end,
+  and backend has been written to validate users in database before joining the chat-room
+  or sending/getting messages, a hacky fix is provided in the backend to create some seed users when
+  backend is created for first time and database is empty.
+- This will align with the front-end fix of three hard-coded users.
+
 #### Detailed Backend Setup (Skip this if backend is already setup)
 
 - Install Requirements
@@ -120,3 +128,45 @@ make frontend-start-dev
 ```sh
 make frontend-start-prod
 ```
+
+## Step-4: Running the Full Application
+
+After setting up both frontend and backend, follow these steps in order to start using the chat application in the browser/s:
+
+1️. Open **two browser windows** (e.g., Safari & Chrome).
+
+- When you first open the app, you need to **select a user** from the home screen.
+
+2️. Select **different users** in each window.
+
+- The chat page opens, showing **available users to chat with**
+
+3️. Choose another user from the list to start a private chat.
+
+- Click on a user, **type a message**, and press **Send**.
+
+4️. The message should appear instantly.
+
+6️. **Messages persist in the database** and reload when reopening the chat.
+
+- The message history is loaded when opening the chat.
+- A **3D icon animation** will appear when a message is sent.
+
+---
+
+## Features Implemented
+
+- **Real-time messaging** with WebSockets & JSON-RPC
+- **Messages are stored** in PostgreSQL using Prisma
+- **Message history loads automatically** when opening a chat
+- **Users join WebSocket rooms automatically**
+- **Animated 3D icons appear when sending a message (To Be Implemented Next)**
+
+## Known Issues & Limitations
+
+- **Refreshing the `/chat` page (once opened after user selection in frontend) causes a route issue** (React Router doesn’t handle refresh properly).
+- **No authentication and Create-User functionality is implemented yet** (users are currently hardcoded).
+
+## License
+
+This project is part of a **coding challenge** and is for evaluation purposes only
