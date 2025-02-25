@@ -7,6 +7,7 @@ import user_routes from './routes/user_routes';
 import message_routes from './routes/message_routes';
 
 import { initialise_websocket } from './wesocket';
+import { seed_users } from './utils/seed_users';
 
 dotenv.config();
 
@@ -26,10 +27,13 @@ app.use('/messages', message_routes);
 const server = http.createServer(app);
 initialise_websocket(server);
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Chat backend is running!');
-});
+// check seed user creation and then start sever
+seed_users().then(() => {
+    app.get('/', (req: Request, res: Response) => {
+        res.send('Chat backend is running!');
+    });
 
-server.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+    server.listen(port, () => {
+        console.log(`Server is running at http://localhost:${port}`);
+    });
 });
