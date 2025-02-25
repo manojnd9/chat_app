@@ -1,9 +1,9 @@
-# Real-time Chat WebApp
+# Real-Time Chat WebApp
 
 ## Project Description
 
 This is a real-time chat web application built using **react and typescript**.
-The application allows users to send messages in real-time while also displaying **animated 3D icons** whenever a message is sent. Also displaying the chat history between two users (sender and receiver).
+The application allows users to send messages in real-time while displaying **animated 3D icons** whenever a message is sent. It also displays the chat history between two users (sender and receiver).
 
 ## Tech Stack Used
 
@@ -37,7 +37,7 @@ NOTE: All the `make` commands mentioned below are in this [Makefile](Makefile) i
 
 ### Step-2.1: Set-up Backend
 
-This step involves **installing requirements, creating database, running prisma migrations to create database schema**.
+This step involves **installing dependencies, creating database, running prisma migrations to create database schema**.
 
 #### Quick Backend Setup and Server Start (Recommended)
 
@@ -133,21 +133,21 @@ make frontend-start-prod
 
 After setting up both frontend and backend, follow these steps in order to start using the chat application in the browser/s:
 
-1️. Open **two browser windows** (e.g., Safari & Chrome).
+1️ Open **two browser windows** (e.g., Safari & Chrome) and open the frontend served on `http://localhost:<available port>`.
 
 - When you first open the app, you need to **select a user** from the home screen.
 
-2️. Select **different users** in each window.
+2️ Select **different users** in each window.
 
 - The chat page opens, showing **available users to chat with**
 
-3️. Choose another user from the list to start a private chat.
+3️ Choose another user from the list to start a private chat.
 
 - Click on a user, **type a message**, and press **Send**.
 
-4️. The message should appear instantly.
+4️ The message should appear instantly.
 
-6️. **Messages persist in the database** and reload when reopening the chat.
+6️ **Messages persist in the database** and reload when reopening the chat.
 
 - The message history is loaded when opening the chat.
 - A **3D icon animation** will appear when a message is sent.
