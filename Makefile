@@ -62,7 +62,7 @@ frontend-setup-firsttime:
 	make frontend-start-dev
 
 frontend:
-	cd ${FRONTEND_DIR} && npm install
+	cd ${FRONTEND_DIR} && npm install --legacy-peer-deps
 
 frontend-start-dev:
 	cd ${FRONTEND_DIR} && PORT=3001 npm run start
