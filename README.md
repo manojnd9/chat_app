@@ -35,6 +35,12 @@ cd chat_app
 
 NOTE: All the `make` commands mentioned below are in this [Makefile](Makefile) in root folder.
 
+#### ENVIRONMENT FILE
+
+- There is example file `.env.example` in `./chat_app/backend/` showing examples of required env variables to be added to .env file before starting with backend set-up.
+- Create a new .env and paste these there and adapt as per your need.
+- You can also keep same values to run the backend locally.
+
 ### Step-2.1: Set-up Backend
 
 This step involves **installing dependencies, creating database, running prisma migrations to create database schema**.

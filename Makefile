@@ -35,6 +35,13 @@ backend-start-prod:
 	cd ${BACKEND_DIR} && npm run build && npm run start
 
 ## Other helper makes for backend
+
+shutdown-db:
+	cd $(BACKEND_DIR) && docker-compose down
+
+shutdown-db-hard-reset: # Removes all data from volume
+	cd $(BACKEND_DIR) && docker-compose down -v
+
 backend-format-check:
 	cd $(BACKEND_DIR) && npx prettier . --check
 
