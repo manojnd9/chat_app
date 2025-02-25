@@ -7,6 +7,9 @@ interface MsgSchema {
     content: string;
 }
 
+/** Validate `senderId`, `receiverId` and store message `content`
+ *  in the database - message table!
+ */
 export async function store_message(params: MsgSchema) {
     // Validate the input data
     const sender = await prisma.user.findUnique({
@@ -43,6 +46,9 @@ export async function store_message(params: MsgSchema) {
     }
 }
 
+/** Get all the message between `senderId` and `receiverId` and return `messages`
+ * ordered by time!
+ */
 export async function get_messages(senderId: number, receiverId: number) {
     try {
         // Validate sender id and receiver id

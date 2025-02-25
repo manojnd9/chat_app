@@ -3,6 +3,13 @@ import { get_messages, store_message } from './services/message_service';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { prisma } from './prisma';
 
+/**
+ * - Opens socket io connection and attaches to http app server passed as arg.
+ * - Contains json-rpc methods for the socket.io events
+ *   - `join`: joins the user to private chat room
+ *   - `sendMessage`: stores sent message in database and broadcasts to the room of receiverId
+ * - returns `io` server function
+ */
 export function initialise_websocket(server: any) {
     const io = new Server(server, {
         cors: {
@@ -19,7 +26,6 @@ export function initialise_websocket(server: any) {
 
     // Register sendMessage method
     rpc_server.addMethod('sendMessage', async ({ senderId, receiverId, content }) => {
-        console.log('RPC message received:', { senderId, receiverId, content });
         try {
             // Store the message in db
             const new_message = await store_message({
@@ -48,9 +54,6 @@ export function initialise_websocket(server: any) {
 
     // Register getMessages method
     rpc_server.addMethod('getMessages', async ({ senderId, receiverId }) => {
-        console.log(
-            `Fetching the messages between sender: ${senderId} and receiver: ${receiverId}`
-        );
         try {
             const messages = await get_messages(senderId, receiverId);
             console.log(`Retrieved ${messages.length} messages!`);
@@ -123,8 +126,6 @@ export function initialise_websocket(server: any) {
 
         // Process input from json-rpc
         socket.on('message', async (data) => {
-            console.log(`Message received: ${data}`);
-
             try {
                 const json = JSON.parse(data);
 

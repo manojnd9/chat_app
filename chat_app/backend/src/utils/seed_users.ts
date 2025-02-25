@@ -1,3 +1,5 @@
+import { prisma } from '../prisma';
+
 /**
  * Since authentication and add/create user functionality is not there in front-end,
  * and backend has been written to validate users in database before joining the chat-room
@@ -5,8 +7,6 @@
  * backend is created for first time and database is empty. This will align with the
  * front-end fix of three hard-coded users.
  */
-import { prisma } from '../prisma';
-
 export async function seed_users() {
     try {
         const users_count = await prisma.user.count();
