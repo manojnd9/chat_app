@@ -7,22 +7,26 @@ The application allows users to send messages in real-time while displaying **an
 
 ## Tech Stack Used
 
+## Tech Stack Used
+
 ### Front-End
 
-- React with Typescript
-- Redux Toolkit for state-management
-- React Router for Navigation in browser
-- TailwindCss for styling
-- Socket.IO Client for real-time communication (with json-rpc format on payload)
-- Three.js and React-three/fiber for 3D animations
+![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white&style=for-the-badge)
+![TypeScript](https://img.shields.io/badge/-TypeScript-007ACC?logo=typescript&logoColor=white&style=for-the-badge)
+![Redux](https://img.shields.io/badge/-Redux-764ABC?logo=redux&logoColor=white&style=for-the-badge)
+![TailwindCSS](https://img.shields.io/badge/-TailwindCSS-38B2AC?logo=tailwindcss&logoColor=white&style=for-the-badge)
+![Three.js](https://img.shields.io/badge/-Three.js-000000?logo=three.js&logoColor=white&style=for-the-badge)
 
 ### Back-End
 
-- Node.js with Express and Typescript
-- Prisma ORM with PostgreSQL database
-- Socket.IO for Websocket communication
-- JSON-RPC-2.0 for structured messaging and socket.io event/method handling
-- Docker-Compose for containerising the PostgreSQL database
+![Node.js](https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white&style=for-the-badge)
+![Express](https://img.shields.io/badge/-Express-000000?logo=express&logoColor=white&style=for-the-badge)
+![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?logo=postgresql&logoColor=white&style=for-the-badge)
+![Prisma](https://img.shields.io/badge/-Prisma-2D3748?logo=prisma&logoColor=white&style=for-the-badge)
+![Socket.io](https://img.shields.io/badge/-Socket.io-010101?logo=socket.io&logoColor=white&style=for-the-badge)
+![Docker](https://img.shields.io/badge/-Docker-2496ED?logo=docker&logoColor=white&style=for-the-badge)
+![Docker Compose](https://img.shields.io/badge/-Docker%20Compose-2496ED?logo=docker&logoColor=white&style=for-the-badge)
+![JSON-RPC](https://img.shields.io/badge/-JSON--RPC-000000?style=for-the-badge)
 
 ## Installation and Setup
 
